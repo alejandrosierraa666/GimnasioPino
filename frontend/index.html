@@ -1,42 +1,17 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="./src/css/style.css">
+  <title>GimnasioOlympo</title>
 </head>
 
-<body style="display: flex; justify-content: center; align-items: center;">
-
-    <div id="qr"></div>
-
-
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
 </body>
 
 </html>
-<script>
-    const qrCode = sessionStorage.getItem("apiData");
-
-    new QRCode(document.getElementById("qr"), {
-        text: qrCode,
-        width: 200,
-        height: 200,
-    });
-
-
-</script>
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        let uuid = "2cb2f067-7143-4e7d-8ecf-083146378821";
-        fetch(`http://localhost:3000/apiolympo/${uuid}`)
-            .then(data => data.json())
-            .then(data => {
-                sessionStorage.setItem("apiData", data.qr_code);
-            })
-            .catch(error => {
-                console.error("Error fetching data:", error);
-            });
-    });
-</script>
