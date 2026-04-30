@@ -11,12 +11,4 @@ app.use(express.json());
 app.use('/apiolympo/', router);
 
 
-app.listen(process.env.API_PORT ?? 3000, async () => {
-    console.log(`Server running on port ${process.env.API_PORT ?? 3000}`);
-    try {
-        await sequelize.sync({ force: false });
-        console.log("Database connection established successfully.");
-    } catch (error) {
-        console.error("Unable to connect to the database:", error);
-    }
-});
+app.listen(process.env.API_PORT ?? 3000);
