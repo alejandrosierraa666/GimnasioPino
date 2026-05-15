@@ -6,14 +6,35 @@ import { AuthContext } from "./context/AuthContext.jsx";
 import useAuth from "./hooks/useAuth";
 
 function AppRouter() {
-    const { isAuth } = useAuth();
+    const { isAuth } = useAuth()
+    const { cliente } = useContext(AuthContext)
 
     return (
         <Routes>
-            <Route path="/" element={isAuth ? <Navigate to="/dashboard" /> : <Navigate to="/login" />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/dashboard" element={isAuth ? <Home /> : <Navigate to="/login" />} />
-            <Route path="*" element={isAuth ? <Home /> : <Navigate to="/login" />} />
+            <Route
+                path="/"
+                element={
+                    isAuth
+                        ? <Navigate to="/dashboard" />
+                        : <Navigate to="/login" />
+                }
+            />
+            <Route
+                path="/login"
+                element={
+                    isAuth
+                        ? <Navigate to="/dashboard" />
+                        : <Login />
+                }
+            />
+            <Route
+                path="/dashboard"
+                element={
+                    isAuth
+                        ? <Home />
+                        : <Navigate to="/login" />
+                }
+            />
         </Routes>
     );
 }

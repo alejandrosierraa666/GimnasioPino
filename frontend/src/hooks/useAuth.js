@@ -1,45 +1,47 @@
 import React, { use, useContext } from 'react'
 import { AuthContext } from '../context/AuthContext'
 import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 const useAuth = () => {
-    const { isAuth, setIsAuth, loginData, setLoginData } = useContext(AuthContext)
-    let navigate = useNavigate()
+    const { isAuth, setIsAuth, loginData, setLoginData, setCliente } = useContext(AuthContext)
 
     const login = async (e) => {
         const formData = new FormData(e.target)
         const data = Object.fromEntries(formData.entries())
-        // console.log(data)
 
         if (!validateForm(data)) {
             alert('Por favor, completa todos los campos')
             return
         }
-        let response = await fetch('http://localhost:3000/apiolympo/clientes/login', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
 
-        let result = await response.json()
+        let response = await axios.post('/apiolympo/clientes/login', { email: data.email, contrasenna: data.contrasenna });
+
+        let result = await response.data
         console.log(result)
 
-        if (response.ok) {
-            
+        if (result.success) {
             setIsAuth(true)
-            navigate('/dashboard')
-
+            setCliente(result.user)
         } else {
             alert(result.error || 'Error desconocido')
         }
     }
 
     const logout = () => {
-        sessionStorage.removeItem('token')
-        setLoginData(null)
+        setLoginData({
+            email: '',
+            contrasenna: '',
+        })
         setIsAuth(false)
+        setCliente(null)
+
+        const response = axios.post('/apiolympo/clientes/logout')
+        if (response.data.success) {
+            alert('Sesión cerrada exitosamente')
+        } else {
+            alert('Error al cerrar sesión')
+        }
     }
 
     const handleInputChange = (e) => {
@@ -56,7 +58,7 @@ const useAuth = () => {
         await login(e)
     }
 
-    return { isAuth, login, logout, handleInputChange, handleSubmit, loginData }
+    return { isAuth, login, logout, handleInputChange, handleSubmit, loginData, logout }
 }
 
 export default useAuth

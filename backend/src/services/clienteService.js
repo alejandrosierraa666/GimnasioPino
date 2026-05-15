@@ -1,10 +1,14 @@
 const Cliente = require("../database/models/Cliente");
 const b = require("bcrypt");
+const { generateAccessToken, generateRefreshToken } = require("../config/auth");
+const jwt = require("jsonwebtoken");
 
 //Funcion para realizar el login del cliente
 const loginCliente = async (email, contrasenna) => {
     try {
-        const result = await Cliente.findOne({ where: { email } });
+        const result = await Cliente.findOne({
+            where: { email }
+        });
 
         if (!result) {
             return { error: "Cliente no encontrado" };
@@ -16,7 +20,22 @@ const loginCliente = async (email, contrasenna) => {
             return { error: "Usuario o contraseña incorrectos" };
         }
 
-        return { ...result, ok: true };
+        const payload = {
+            id: result.qr_code,
+            email: result.email,
+            name: result.nombre,
+            rol: result.rol ?? 3
+        };
+
+        const token = jwt.sign(payload, process.env.JWT_SECRET, {
+            expiresIn: '3d'
+        });
+
+        return {
+            token,
+            user: payload,
+            success: true
+        };
 
     } catch (error) {
         console.error(error);
