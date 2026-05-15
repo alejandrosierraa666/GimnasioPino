@@ -1,4 +1,4 @@
-const Cliente = require("../models/Cliente");
+const Cliente = require("../database/models/Cliente");
 const b = require("bcrypt");
 
 //Funcion para realizar el login del cliente
@@ -7,20 +7,20 @@ const loginCliente = async (email, contrasenna) => {
         const result = await Cliente.findOne({ where: { email } });
 
         if (!result) {
-            return res.status(404).json({ error: "Cliente no encontrado" });
+            return { error: "Cliente no encontrado" };
         }
 
         const isPasswordValid = b.compareSync(contrasenna, result.contrasenna);
 
         if (!isPasswordValid) {
-            return res.status(401).json({ error: "Contraseña incorrecta" });
+            return { error: "Usuario o contraseña incorrectos" };
         }
 
-        return res.status(200).json(result);
+        return { ...result, ok: true };
 
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: error.message });
+        return { error: error.message };
     }
 };
 

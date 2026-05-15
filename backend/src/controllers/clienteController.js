@@ -29,6 +29,7 @@ const obtenerClientePorQR = async (req, res) => {
 
 const loginCliente = async (req, res) => {
     const { email, contrasenna } = req.body;
+    console.log(email, contrasenna)
     try {
         const result = await clienteService.loginCliente(email, contrasenna);
         if (!result)
