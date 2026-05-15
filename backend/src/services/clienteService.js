@@ -1,6 +1,6 @@
 const Cliente = require("../database/models/Cliente");
 const b = require("bcrypt");
-const { generateAccessToken, generateRefreshToken } = require("../config/auth");
+const { generateAccessToken } = require("../config/auth");
 const jwt = require("jsonwebtoken");
 
 //Funcion para realizar el login del cliente
@@ -20,20 +20,20 @@ const loginCliente = async (email, contrasenna) => {
             return { error: "Usuario o contraseña incorrectos" };
         }
 
-        const payload = {
+        const cliente = {
             id: result.qr_code,
             email: result.email,
             name: result.nombre,
             rol: result.rol ?? 3
         };
 
-        const token = jwt.sign(payload, process.env.JWT_SECRET, {
+        const token = jwt.sign({ id: cliente.id }, process.env.JWT_SECRET, {
             expiresIn: '3d'
         });
 
         return {
             token,
-            user: payload,
+            user: cliente,
             success: true
         };
 

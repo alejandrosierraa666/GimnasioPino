@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 
 const useAuth = () => {
-    const { isAuth, setIsAuth, loginData, setLoginData, setCliente } = useContext(AuthContext)
+    const { isAuth, setIsAuth, loginData, setLoginData, setCliente, cliente, loading } = useContext(AuthContext)
 
     const login = async (e) => {
         const formData = new FormData(e.target)
@@ -15,7 +15,7 @@ const useAuth = () => {
             return
         }
 
-        let response = await axios.post('/apiolympo/clientes/login', { email: data.email, contrasenna: data.contrasenna });
+        let response = await axios.post('/apiolympo/clientes/login', { email: data.email, contrasenna: data.contrasenna }, { withCredentials: true });
 
         let result = await response.data
         console.log(result)
@@ -58,7 +58,7 @@ const useAuth = () => {
         await login(e)
     }
 
-    return { isAuth, login, logout, handleInputChange, handleSubmit, loginData, logout }
+    return { isAuth, login, logout, handleInputChange, handleSubmit, loginData, cliente, loading }
 }
 
 export default useAuth

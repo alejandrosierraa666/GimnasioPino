@@ -1,16 +1,23 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Home from "./pages/Home";
-import { useContext } from "react";
-import { AuthContext } from "./context/AuthContext.jsx";
+import Admin from "./pages/Admin";
+import Master from "./pages/Master";
+import Unauthorized from "./pages/Unauthorized";
+
 import useAuth from "./hooks/useAuth";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function AppRouter() {
-    const { isAuth } = useAuth()
-    const { cliente } = useContext(AuthContext)
+
+    const { isAuth, loading } = useAuth();
+
+    if (loading) return <div>Loading...</div>;
 
     return (
+
         <Routes>
+
             <Route
                 path="/"
                 element={
@@ -19,6 +26,7 @@ function AppRouter() {
                         : <Navigate to="/login" />
                 }
             />
+
             <Route
                 path="/login"
                 element={
@@ -27,14 +35,48 @@ function AppRouter() {
                         : <Login />
                 }
             />
+
+            {/* CLIENTE */}
             <Route
                 path="/dashboard"
                 element={
-                    isAuth
-                        ? <Home />
-                        : <Navigate to="/login" />
+                    <ProtectedRoute
+                        allowedRoles={[3, 2, 1]}
+                    >
+                        <Home />
+                    </ProtectedRoute>
                 }
             />
+
+            {/* ADMIN */}
+            <Route
+                path="/admin"
+                element={
+                    <ProtectedRoute
+                        allowedRoles={[2, 1]}
+                    >
+                        <Admin />
+                    </ProtectedRoute>
+                }
+            />
+
+            {/* MASTER */}
+            <Route
+                path="/master"
+                element={
+                    <ProtectedRoute
+                        allowedRoles={[1]}
+                    >
+                        <Master />
+                    </ProtectedRoute>
+                }
+            />
+
+            <Route
+                path="/unauthorized"
+                element={<Unauthorized />}
+            />
+
         </Routes>
     );
 }

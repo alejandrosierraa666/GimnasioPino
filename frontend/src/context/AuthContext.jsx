@@ -8,6 +8,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
     const [isAuth, setIsAuth] = useState(false);
     const [cliente, setCliente] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [loginData, setLoginData] = useState({
         email: '',
         contrasenna: '',
@@ -18,12 +19,16 @@ export const AuthProvider = ({ children }) => {
 
     const checkAuth = async () => {
         try {
-            const res = await axios.get('/apiolympo/clientes/me');
-            setCliente(res.data.cliente);
+            const me = await axios.get('/apiolympo/clientes/me');
+            console.log("🔍 /me response:", me.data);
+            setCliente(me.data.cliente);
             setIsAuth(true);
         } catch (error) {
+            console.log("❌ checkAuth error:", error.response?.status, error.response?.data);
             setIsAuth(false);
             setCliente(null);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -32,7 +37,7 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     return (
-        <AuthContext.Provider value={{ isAuth, setIsAuth, loginData, setLoginData, setCliente }}>
+        <AuthContext.Provider value={{ isAuth, setIsAuth, loginData, setLoginData, setCliente, cliente, loading }}>
             {children}
         </AuthContext.Provider>
     );
