@@ -15,7 +15,7 @@ const useAuth = () => {
             return
         }
 
-        let response = await axios.post('/apiolympo/clientes/login', { email: data.email, contrasenna: data.contrasenna }, { withCredentials: true });
+        let response = await axios.post('/apiolympo/clientes/login', { email: data.email, contrasenna: data.contrasenna },  { withCredentials: true });
 
         let result = await response.data
         console.log(result)

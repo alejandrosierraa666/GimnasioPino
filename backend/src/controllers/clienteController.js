@@ -15,20 +15,23 @@ const obtenerClientes = async (req, res) => {
     return res.status(200).json(result);
 };
 
-    const getMe = async (req, res) => {
-        try {
-            res.json({
-                success: true,
-                cliente: req.cliente
-            });
-        } catch (error) {
-            res.status(500).json({ success: false, message: "Error al obtener datos" });
-        }
-    };
+const getMe = async (req, res) => {
+
+    console.log(req.cliente);
+    try {
+        res.json({
+            success: true,
+            cliente: req.cliente
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "Error al obtener datos" });
+    }
+};
 
 const logout = async (req, res) => {
     try {
         res.clearCookie('authToken');
+        res.status(200).json({ success: true, message: "Sesión cerrada exitosamente" });
     } catch (error) {
         console.error(error);
         return res.status(500).json({ error: "Error al cerrar sesión", detail: error.message });

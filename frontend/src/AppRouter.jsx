@@ -77,6 +77,15 @@ function AppRouter() {
                 element={<Unauthorized />}
             />
 
+            <Route
+                path="*"
+                element={
+                    isAuth
+                        ? <Navigate to="/dashboard" />
+                        : <Navigate to="/login" />
+                }
+            />
+
         </Routes>
     );
 }

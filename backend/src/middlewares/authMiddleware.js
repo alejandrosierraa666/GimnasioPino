@@ -11,10 +11,9 @@ const authenticateCliente = async (req, res, next) => {
     try {
         const decoded = await jwt.verify(token, process.env.JWT_SECRET);
 
-        console.log("Token recibido:", decoded);
-        const cliente = await Cliente.findOne({ qr_code: decoded.id });
+        console.log("Token decodificado:", decoded);
 
-        console.log("decoded:", decoded);
+        const cliente = await Cliente.findOne({ qr_code: decoded.id });
 
         if (!cliente) {
             return res.status(404).json({
@@ -24,8 +23,6 @@ const authenticateCliente = async (req, res, next) => {
         }
 
         req.cliente = cliente;
-
-        console.log("Cliente autenticado:", { id: cliente.id, email: cliente.email, name: cliente.nombre });
         next();
     } catch (error) {
         return res.status(403).json({ success: false, message: error.message });
